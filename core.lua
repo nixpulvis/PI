@@ -26,11 +26,11 @@ end
 -- Frame to handle all events.
 local event_handler = CreateFrame("Frame", nil, UIParent)
 
--- ### `watch for cast`
--- Trigger activation callback function when given spell cast is started by 
+-- ### `watch_for_cast( string, string, function, function )`
+-- Trigger callback function when given spell cast is started by 
 -- given unit, then call rollback function when spell is stopped being 
 -- casted by given unit.
-local function watch_for_cast( unit, spell, activation, rollback )
+local function watch_for_cast( unit, spell, trigger, rollback )
 
   -- Watch for spell casts from unit.
   event_handler:RegisterEvent("UNIT_SPELLCAST_START")
@@ -38,28 +38,32 @@ local function watch_for_cast( unit, spell, activation, rollback )
   event_handler:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START")
   event_handler:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP")
 
-  -- Activation condition.
   event_handler:HookScript("OnEvent", function( self, event, ... )
-    if event == "UNIT_SPELLCAST_START" or event == "UNIT_SPELLCAST_CHANNEL_START" then
+
+   -- Activation.
+   if event == "UNIT_SPELLCAST_START" or event == "UNIT_SPELLCAST_CHANNEL_START" then
       local cast_unit, cast_spell = ...
       if cast_unit == unit and cast_spell == spell then
-        activation()
+        trigger()
       end
-    end
-  end)
-
-  -- Rollback condition.
-  event_handler:HookScript("OnEvent", function( self, event, ... )
-    if event == "UNIT_SPELLCAST_STOP" or event == "UNIT_SPELLCAST_CHANNEL_STOP" then
+    
+    -- Rollback.
+    elseif event == "UNIT_SPELLCAST_STOP" or event == "UNIT_SPELLCAST_CHANNEL_STOP" then
       local cast_unit, cast_spell = ...
       if cast_unit == unit and cast_spell == spell then
         rollback()
       end
     end
+
   end)
 end
 
-local function watch_for_aura( unit, spell, filter, activation, rollback )
+-- ### `watch_for_aura( string, string, string, function, function )`
+-- Trigger callback when given unit has the given spell aura.
+-- The filter is the same as the input to `UnitAura`, and determines what
+-- type of aura to look for on the unit. Rollback callback is called when
+-- the unit no longer has the aura.
+local function watch_for_aura( unit, spell, filter, trigger, rollback )
   
   -- Watch for auras on unit.
   event_handler:RegisterEvent("UNIT_AURA")
@@ -69,8 +73,11 @@ local function watch_for_aura( unit, spell, filter, activation, rollback )
       local aura_unit = ...
       if aura_unit == unit then
 
+        -- Activation callback when the unit has the aura.
         if has_aura(unit, spell, filter) then
-          activation()
+          trigger()
+
+        -- Rollback when the unit no longer has the aura.
         else
           rollback()
         end
@@ -94,24 +101,31 @@ blocker.texture:SetTexture(1.0, 0.0, 0.0, 0.5)
 -- Intercept Mouse Clicks, preventing any use of spells below the frame.
 blocker:EnableMouse(true)
 
--- Set clickablitliy based on spell cast
-function blocker:watch_for_cast( unit, spell )
-  watch_for_cast(unit, spell, function()
-    self:EnableMouse(false)
-  end, function()
-    self:EnableMouse(true)
-  end)
+-- ### `pass`
+-- Allow clicks, and set color to indicate passing condition.
+function blocker:pass()
+  self:EnableMouse(false)
+  self.texture:SetTexture(0.0, 1.0, 0.0, 0.5)
 end
 
+-- ### `block`
+-- Intercept mouse clicks and set color to indicate no conditions met.
+function blocker:block()
+  self:EnableMouse(true)
+  self.texture:SetTexture(1.0, 0.0, 0.0, 0.5)
+end
+-- 
+
+-- ### `blocker:watch_for_cast( string, string )
+-- Set clickablitliy based on spell cast
+function blocker:watch_for_cast( unit, spell )
+  watch_for_cast(unit, spell, self:pass, self:block)
+end
+
+-- ### `blocker:watch_for_aura( string, string, string )
 -- Set clickablitliy based on spell aura
 function blocker:watch_for_aura( unit, spell, filter )
-  watch_for_aura(unit, spell, filter, function()
-    self:EnableMouse(false)
-    self.texture:SetTexture(0.0, 1.0, 0.0, 0.5)
-  end, function()
-    self:EnableMouse(true)
-    self.texture:SetTexture(1.0, 0.0, 0.0, 0.5)
-  end)
+  watch_for_aura(unit, spell, filter, self:pass, self:block)
 end
 
 -- Default Position / Size
