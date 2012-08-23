@@ -6,24 +6,26 @@ end
 
 -- ## Helper Functions
 
+-- ### `has_aura( string, string, string )
+-- Returns true when the given unit has the given aura. Filter is a string
+-- describing attributes of the aura. For a complete list of valid filters
+-- look up the documentation of `UnitAura()`.
 local function has_aura( unit, spell, filter )
-  i = 1
+  i = 1 -- spells in WoW are indexed starting at 1
   repeat
     name = UnitAura(unit, i, filter)
-    -- check for the spell.
     if name == spell then
       return true
     end
     i = i + 1
   until name == nil
 
-  -- If we get here the spell does not exist.
-  return false
+  return false  -- spell does not exist.
 end
 
 -- ## Detection
 
--- Frame to handle all events.
+-- Single frame to handle all events.
 local event_handler = CreateFrame("Frame", nil, UIParent)
 
 -- ### `watch_for_cast( string, string, function, function )`
@@ -37,7 +39,6 @@ local function watch_for_cast( unit, spell, trigger, rollback )
   event_handler:RegisterEvent("UNIT_SPELLCAST_STOP")
   event_handler:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START")
   event_handler:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP")
-
   event_handler:HookScript("OnEvent", function( self, event, ... )
 
    -- Activation.
@@ -67,7 +68,6 @@ local function watch_for_aura( unit, spell, filter, trigger, rollback )
   
   -- Watch for auras on unit.
   event_handler:RegisterEvent("UNIT_AURA")
-
   event_handler:HookScript("OnEvent", function( self, event, ... )
     if event == "UNIT_AURA" then
       local aura_unit = ...
@@ -90,15 +90,21 @@ end
 
 -- ## Blocker
 
--- The frame itself.
+-- The frame that sits over action buttons and prevents clicking until
+-- conditions are met.
 local blocker = CreateFrame("Frame", "PIBlocker", UIParent)
+
+-- Default position and size
+blocker:SetPoint("CENTER")
+blocker:SetSize(300, 50)
 
 -- The blocker's looks.
 blocker.texture = blocker:CreateTexture(nil, "BACKGROUND")
 blocker.texture:SetAllPoints()
 blocker.texture:SetTexture(1.0, 0.0, 0.0, 0.5)
 
--- Intercept Mouse Clicks, preventing any use of spells below the frame.
+-- Intercept mouse clicks, preventing any mouse interactions with elements
+-- below this frame.
 blocker:EnableMouse(true)
 
 -- ### `pass`
@@ -128,14 +134,8 @@ function blocker:watch_for_aura( unit, spell, filter )
   watch_for_aura(unit, spell, filter, self:pass, self:block)
 end
 
--- Default Position / Size
-blocker:SetPoint("CENTER")
-blocker:SetSize(300, 50)
-
 
 -------------
 -- TESTING --
 -------------
--- blocker:watch_for_cast("player", "Healing Touch")
-blocker:watch_for_aura("target", "Moonfire", "PLAYER|HARMFUL")
 blocker:watch_for_aura("target", "Insect Swarm", "PLAYER|HARMFUL")
