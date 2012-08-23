@@ -3,5 +3,6 @@
 ## Version: 2.0.0
 ## Title: PerfectInterrupt
 ## Notes: Never miss that critical interrupt again. Blocks clicks until desired action.
+## SavedVariablesPerCharacter: PIConditions
 
 core.lua
