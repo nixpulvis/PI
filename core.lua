@@ -28,6 +28,14 @@ end
 -- Single frame to handle all events.
 local event_handler = CreateFrame("Frame", nil, UIParent)
 
+-- ### `watch_for_casts( unit )`
+-- Trigger callback function when any interruptible cast is started by the
+-- given unit. Can be forced to trigger callback even when cast is protected,
+-- by setting optional 2nd arg equal to true.
+local function watch_for_casts( unit, force )
+  -- body
+end
+
 -- ### `watch_for_cast( string, string, function, function )`
 -- Trigger callback function when given spell cast is started by 
 -- given unit, then call rollback function when spell is stopped being 
@@ -57,6 +65,14 @@ local function watch_for_cast( unit, spell, trigger, rollback )
     end
 
   end)
+end
+
+-- ### `watch_for_auras( string, string, string )
+-- Trigger the callback when given unit has any spell matching the given
+-- type and filter. The type will be set to auras the player can dispel or
+-- purge be default.
+local function watch_for_auras( unit, filter, type )
+  -- body
 end
 
 -- ### `watch_for_aura( string, string, string, function, function )`
