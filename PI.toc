@@ -1,0 +1,7 @@
+## Interface: 50000
+## Author: Epicgrim
+## Version: 2.0.0
+## Title: PerfectInterrupt
+## Notes: Never miss that critical interrupt again. Blocks clicks until desired action.
+
+core.lua

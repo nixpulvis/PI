@@ -1,4 +1,3 @@
-PerfectInterrupt
-================
+# PI = Perfect Interrupts
 
-Tool to aid with interrupts in World of Warcraft.
+Never miss that critical interrupt again. Blocks clicks until desired action.
