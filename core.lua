@@ -62,5 +62,3 @@ function blocker:watch_for_aura( unit, spell, filter )
     self:block()
   end)
 end
-
-blocker:watch_for_cast('player', "Hurricane")
