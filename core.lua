@@ -32,8 +32,32 @@ local event_handler = CreateFrame("Frame", nil, UIParent)
 -- Trigger callback function when any interruptible cast is started by the
 -- given unit. Can be forced to trigger callback even when cast is protected,
 -- by setting optional 2nd arg equal to true.
-local function watch_for_casts( unit, force )
-  -- body
+local function watch_for_casts( unit, force, trigger, rollback )
+
+  -- Watch for spell casts from unit.
+  event_handler:RegisterEvent("UNIT_SPELLCAST_START")
+  event_handler:RegisterEvent("UNIT_SPELLCAST_STOP")
+  event_handler:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START")
+  event_handler:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP")
+  event_handler:HookScript("OnEvent", function( self, event, ... )
+    local cast_unit = ...
+    local interrupt = select(9, UnitCastingInfo(unit))
+    
+    -- Activation.
+    if event == "UNIT_SPELLCAST_START" or event == "UNIT_SPELLCAST_CHANNEL_START" then
+      if cast_unit == unit and (interrupt or force) then
+        trigger()
+      end
+    
+    -- Rollback.
+    elseif event == "UNIT_SPELLCAST_STOP" or event == "UNIT_SPELLCAST_CHANNEL_STOP" then
+      if cast_unit == unit and (interrupt or force) then
+        rollback()
+      end
+    end
+
+  end)
+  
 end
 
 -- ### `watch_for_cast( string, string, function, function )`
@@ -48,17 +72,16 @@ local function watch_for_cast( unit, spell, trigger, rollback )
   event_handler:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START")
   event_handler:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP")
   event_handler:HookScript("OnEvent", function( self, event, ... )
+    local cast_unit, cast_spell = ...
 
-   -- Activation.
-   if event == "UNIT_SPELLCAST_START" or event == "UNIT_SPELLCAST_CHANNEL_START" then
-      local cast_unit, cast_spell = ...
+    -- Activation.
+    if event == "UNIT_SPELLCAST_START" or event == "UNIT_SPELLCAST_CHANNEL_START" then
       if cast_unit == unit and cast_spell == spell then
         trigger()
       end
     
     -- Rollback.
     elseif event == "UNIT_SPELLCAST_STOP" or event == "UNIT_SPELLCAST_CHANNEL_STOP" then
-      local cast_unit, cast_spell = ...
       if cast_unit == unit and cast_spell == spell then
         rollback()
       end
@@ -136,7 +159,16 @@ function blocker:block()
   self:EnableMouse(true)
   self.texture:SetTexture(1.0, 0.0, 0.0, 0.5)
 end
--- 
+
+-- ### `blocker:watch_for_casts( string, string )
+-- Set clickablitliy based on spell cast
+function blocker:watch_for_casts( unit, force )
+  watch_for_casts(unit, force, function()
+    self:pass()
+  end, function()
+    self:block()
+  end)
+end
 
 -- ### `blocker:watch_for_cast( string, string )
 -- Set clickablitliy based on spell cast
@@ -157,10 +189,3 @@ function blocker:watch_for_aura( unit, spell, filter )
     self:block()
   end)
 end
-
-
--------------
--- TESTING --
--------------
-blocker:watch_for_cast('player', 'Hurricane')
--- blocker:watch_for_aura("target", "Insect Swarm", "PLAYER|HARMFUL")
