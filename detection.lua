@@ -5,11 +5,11 @@ local PI = select(2, ...)
 -- Single frame to handle all events.
 local event_handler = CreateFrame("Frame", nil, UIParent)
 
--- ### `watch_for_casts( unit )`
+-- ### `detect_casts( unit )`
 -- Trigger callback function when any interruptible cast is started by the
 -- given unit. Can be forced to trigger callback even when cast is protected,
 -- by setting optional 2nd arg equal to true.
-function PI:watch_for_casts( unit, force, trigger, rollback )
+function PI:detect_casts( unit, force, trigger, rollback )
 
   -- Watch for spell casts from unit.
   event_handler:RegisterEvent("UNIT_SPELLCAST_START")
@@ -37,11 +37,11 @@ function PI:watch_for_casts( unit, force, trigger, rollback )
   
 end
 
--- ### `watch_for_cast( string, string, function, function )`
+-- ### `detect_cast( string, string, function, function )`
 -- Trigger callback function when given spell cast is started by 
 -- given unit, then call rollback function when spell is stopped being 
 -- casted by given unit.
-function PI:watch_for_cast( unit, spell, trigger, rollback )
+function PI:detect_cast( unit, spell, trigger, rollback )
 
   -- Watch for spell casts from unit.
   event_handler:RegisterEvent("UNIT_SPELLCAST_START")
@@ -67,25 +67,26 @@ function PI:watch_for_cast( unit, spell, trigger, rollback )
   end)
 end
 
--- ### `watch_for_auras( string, string, string )
+-- ### `detect_auras( string, string, string )
 -- Trigger the callback when given unit has any spell matching the given
 -- type and filter. The type will be set to auras the player can dispel or
 -- purge be default.
-function PI:watch_for_auras( unit, filter, type )
+function PI:detect_auras( unit, filter, type )
   -- body
 end
 
--- ### `watch_for_aura( string, string, string, function, function )`
+-- ### `detect_aura( string, string, string, function, function )`
 -- Trigger callback when given unit has the given spell aura.
 -- The filter is the same as the input to `UnitAura`, and determines what
 -- type of aura to look for on the unit. Rollback callback is called when
 -- the unit no longer has the aura.
-function PI:watch_for_aura( unit, spell, filter, trigger, rollback )
+function PI:detect_aura( unit, spell, filter, trigger, rollback )
   
   -- Watch for auras on unit.
   event_handler:RegisterEvent("UNIT_AURA")
+  event_handler:RegisterEvent("PLAYER_TARGET_CHANGED")
   event_handler:HookScript("OnEvent", function( self, event, ... )
-    if event == "UNIT_AURA" then
+    if event == "UNIT_AURA" or event == "PLAYER_TARGET_CHANGED" then
       local aura_unit = ...
       if aura_unit == unit then
 

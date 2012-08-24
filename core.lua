@@ -5,9 +5,10 @@ local PI = select(2, ...)
 -- The frame that sits over action buttons and prevents clicking until
 -- conditions are met.
 local blocker = CreateFrame("Frame", "PIBlocker", UIParent)
+blocker:SetFrameStrata("TOOLTIP")
 
 -- Default position and size
-blocker:SetPoint("CENTER")
+blocker:SetPoint("BOTTOM", 0, 50)
 blocker:SetSize(300, 50)
 
 -- The blocker's looks.
@@ -33,32 +34,34 @@ function blocker:block()
   self.texture:SetTexture(1.0, 0.0, 0.0, 0.5)
 end
 
--- ### `blocker:watch_for_casts( string, string )
+-- ### `blocker:detect_casts( string, string )
 -- Set clickablitliy based on spell cast
-function blocker:watch_for_casts( unit, force )
-  PI:watch_for_casts(unit, force, function()
+function blocker:pass_on_casts( unit, force )
+  PI:detect_casts(unit, force, function()
     self:pass()
   end, function()
     self:block()
   end)
 end
 
--- ### `blocker:watch_for_cast( string, string )
+-- ### `blocker:detect_cast( string, string )
 -- Set clickablitliy based on spell cast
-function blocker:watch_for_cast( unit, spell )
-  PI:watch_for_cast(unit, spell, function()
+function blocker:pass_on_cast( unit, spell )
+  PI:detect_cast(unit, spell, function()
     self:pass()
   end, function()
     self:block()
   end)
 end
 
--- ### `blocker:watch_for_aura( string, string, string )
+-- ### `blocker:detect_aura( string, string, string )
 -- Set clickablitliy based on spell aura
-function blocker:watch_for_aura( unit, spell, filter )
-  PI:watch_for_aura(unit, spell, filter, function()
+function blocker:pass_on_aura( unit, spell, filter )
+  PI:detect_aura(unit, spell, filter, function()
     self:pass()
   end, function()
     self:block()
   end)
 end
+
+blocker:pass_on_casts('target')
