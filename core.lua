@@ -141,17 +141,26 @@ end
 -- ### `blocker:watch_for_cast( string, string )
 -- Set clickablitliy based on spell cast
 function blocker:watch_for_cast( unit, spell )
-  watch_for_cast(unit, spell, self:pass, self:block)
+  watch_for_cast(unit, spell, function()
+    self:pass()
+  end, function()
+    self:block()
+  end)
 end
 
 -- ### `blocker:watch_for_aura( string, string, string )
 -- Set clickablitliy based on spell aura
 function blocker:watch_for_aura( unit, spell, filter )
-  watch_for_aura(unit, spell, filter, self:pass, self:block)
+  watch_for_aura(unit, spell, filter, function()
+    self:pass()
+  end, function()
+    self:block()
+  end)
 end
 
 
 -------------
 -- TESTING --
 -------------
-blocker:watch_for_aura("target", "Insect Swarm", "PLAYER|HARMFUL")
+blocker:watch_for_cast('player', 'Hurricane')
+-- blocker:watch_for_aura("target", "Insect Swarm", "PLAYER|HARMFUL")
