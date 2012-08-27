@@ -16,5 +16,5 @@ function PI:has_aura( unit, spell, filter )
     i = i + 1
   until name == nil
 
-  return false  -- spell does not exist.
+  return false  -- unit doesn't have spell on it
 end
