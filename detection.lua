@@ -87,8 +87,7 @@ function PI:detect_aura( unit, spell, filter, trigger, rollback )
   event_handler:RegisterEvent("PLAYER_TARGET_CHANGED")
   event_handler:HookScript("OnEvent", function( self, event, ... )
     if event == "UNIT_AURA" or event == "PLAYER_TARGET_CHANGED" then
-      local aura_unit = ...
-      if aura_unit == unit then
+      if ... == unit then
 
         -- Activation callback when the unit has the aura.
         if PI:has_aura(unit, spell, filter) then
