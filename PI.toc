@@ -7,5 +7,5 @@
 
 helpers.lua
 detection.lua
-core.lua
+blocker.lua
 cli.lua
