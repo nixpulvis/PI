@@ -8,3 +8,4 @@
 helpers.lua
 detection.lua
 core.lua
+cli.lua
