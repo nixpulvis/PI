@@ -8,9 +8,9 @@ function SlashCmdList.PI( msg, editbox )
     print("PI (Perfect Interrupt)")
   else
 
-    -- spells
-    if string.find(msg, "spell") then
-      local unit, spell = strsplit(" ", string.gsub(msg, "spell ", ""), 2)
+    -- cast
+    if string.find(msg, "cast") then
+      local unit, spell = strsplit(" ", string.gsub(msg, "cast ", ""), 2)
       PI.blocker:pass_on_cast(unit, spell)
     end
 
