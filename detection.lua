@@ -34,7 +34,6 @@ function PI:detect_casts( unit, force, trigger, rollback )
     end
 
   end)
-
 end
 
 -- ### `detect_cast( string, string, function, function )`
@@ -101,5 +100,4 @@ function PI:detect_aura( unit, spell, filter, trigger, rollback )
       end
     end
   end)
-
 end
