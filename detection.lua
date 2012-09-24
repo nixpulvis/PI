@@ -101,3 +101,11 @@ function PI:detect_aura( unit, spell, filter, trigger, rollback )
     end
   end)
 end
+
+-- ### `PI:reset_detection()`
+-- Unregister all events from PI's event frame, and reset the
+-- script that handles spell, aura... detection.
+function PI:reset_detection()
+  event_handler:UnregisterAllEvents()
+  event_handler:SetScript("OnEvent", nil)
+end
