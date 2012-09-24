@@ -2,17 +2,22 @@ local PI = select(2, ...)
 
 SLASH_PI1 = '/pi'
 function SlashCmdList.PI( msg, editbox )
+
+  -- no args
   if msg == "" then
     print("PI (Perfect Interrupt)")
   else
-    if msg == "create" then
-      PI.blocker:SetPoint("BOTTOM", 0, 50)
-      PI.blocker:SetSize(300, 50)
+
+    -- spells
+    if string.find(msg, "spell") then
+      local unit, spell = strsplit(" ", string.gsub(msg, "spell ", ""), 2)
+      PI.blocker:pass_on_cast(unit, spell)
     end
 
-    if string.find(msg, "spell") then
-      spell = string.gsub(msg, "spell ", "")
-      PI.blocker:pass_on_cast( 'player', spell )
+    -- auras
+    if string.find(msg, "aura") then
+      local unit, spell, filter = strsplit(" ", string.gsub(msg, "aura ", ""), 3)
+      PI.blocker:pass_on_aura(unit, spell, filter)
     end
   end
 end
