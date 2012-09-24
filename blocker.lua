@@ -18,6 +18,25 @@ PI.blocker.texture:SetAllPoints()
 -- Block by default.
 PI.blocker:block()
 
+-- ### `toggle_movable()`
+-- Toggle the blocks ability to be repositioned.
+function PI.blocker:toggle_movable()
+  -- don't allow toggle in combat
+  if InCombatLockdown() then return end
+
+  if self:IsMovable() then
+    self:SetMovable(false)
+    self:RegisterForDrag("LeftButton")
+    self:SetScript("OnDragStart", self.StartMoving)
+    self:SetScript("OnDragStop", self.StopMovingOrSizing)
+  else
+    self:SetMovable(false)
+    self:RegisterForDrag() -- disables mouse event dragging
+    self:SetScript("OnDragStart", nil)
+    self:SetScript("OnDragStop", nil)
+  end
+end
+
 -- ### `pass`
 -- Allow clicks, and set color to indicate passing condition.
 function PI.blocker:pass()

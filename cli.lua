@@ -8,6 +8,11 @@ function SlashCmdList.PI( msg, editbox )
     print("PI (Perfect Interrupt)")
   else
 
+    -- resizing/moving
+    if msg == "move" or msg == "resize" then
+      PI.blocker:toggle_movable()
+    end
+
     -- cast
     if string.find(msg, "cast") then
       local unit, spell = strsplit(" ", string.gsub(msg, "cast ", ""), 2)
