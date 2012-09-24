@@ -63,5 +63,3 @@ function blocker:pass_on_aura( unit, spell, filter )
     self:block()
   end)
 end
-
-blocker:pass_on_casts('target')
