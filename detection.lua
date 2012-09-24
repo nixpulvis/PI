@@ -19,13 +19,13 @@ function PI:detect_casts( unit, force, trigger, rollback )
   event_handler:HookScript("OnEvent", function( self, event, ... )
     local cast_unit = ...
     local interrupt = select(9, UnitCastingInfo(unit))
-    
+
     -- Activation.
     if event == "UNIT_SPELLCAST_START" or event == "UNIT_SPELLCAST_CHANNEL_START" then
       if cast_unit == unit and (interrupt or force) then
         trigger()
       end
-    
+
     -- Rollback.
     elseif event == "UNIT_SPELLCAST_STOP" or event == "UNIT_SPELLCAST_CHANNEL_STOP" then
       if cast_unit == unit and (interrupt or force) then
@@ -34,12 +34,12 @@ function PI:detect_casts( unit, force, trigger, rollback )
     end
 
   end)
-  
+
 end
 
 -- ### `detect_cast( string, string, function, function )`
--- Trigger callback function when given spell cast is started by 
--- given unit, then call rollback function when spell is stopped being 
+-- Trigger callback function when given spell cast is started by
+-- given unit, then call rollback function when spell is stopped being
 -- casted by given unit.
 function PI:detect_cast( unit, spell, trigger, rollback )
 
@@ -56,7 +56,7 @@ function PI:detect_cast( unit, spell, trigger, rollback )
       if cast_unit == unit and cast_spell == spell then
         trigger()
       end
-    
+
     -- Rollback.
     elseif event == "UNIT_SPELLCAST_STOP" or event == "UNIT_SPELLCAST_CHANNEL_STOP" then
       if cast_unit == unit and cast_spell == spell then
@@ -81,7 +81,7 @@ end
 -- type of aura to look for on the unit. Rollback callback is called when
 -- the unit no longer has the aura.
 function PI:detect_aura( unit, spell, filter, trigger, rollback )
-  
+
   -- Watch for auras on unit.
   event_handler:RegisterEvent("UNIT_AURA")
   event_handler:RegisterEvent("PLAYER_TARGET_CHANGED")
