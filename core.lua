@@ -1,6 +1,6 @@
 local PI = select(2, ...)
 
--- ## Implementation
+-- ## Singleton Blocker
 
 -- The frame that sits over action buttons and prevents clicking until
 -- conditions are met.
@@ -14,11 +14,9 @@ PI.blocker:SetSize(50, 50)
 -- The PI.blocker's looks.
 PI.blocker.texture = PI.blocker:CreateTexture(nil, "BACKGROUND")
 PI.blocker.texture:SetAllPoints()
-PI.blocker.texture:SetTexture(1.0, 0.0, 0.0, 0.5)
 
--- Intercept mouse clicks, preventing any mouse interactions with elements
--- below this frame.
-PI.blocker:EnableMouse(true)
+-- Block by default.
+PI.blocker:block()
 
 -- ### `pass`
 -- Allow clicks, and set color to indicate passing condition.
