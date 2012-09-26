@@ -10,6 +10,7 @@ function SlashCmdList.PI( msg, editbox )
 
     -- resizing/moving
     if msg == "move" or msg == "resize" then
+      print("moving")
       PI.blocker:toggle_movable()
     end
 
@@ -24,5 +25,11 @@ function SlashCmdList.PI( msg, editbox )
       local unit, spell, filter = strsplit(" ", string.gsub(msg, "aura ", ""), 3)
       PI.blocker:pass_on_aura(unit, spell, filter)
     end
+
+    -- reset detection
+    if msg == "reset" then
+      PI:reset_detection()
+    end
+
   end
 end
