@@ -84,3 +84,6 @@ PI.blocker.texture:SetAllPoints()
 
 -- Block by default.
 PI.blocker:block()
+
+-- :: PASS ON ____ :: ----------------------------------
+PI.blocker:pass_on_cast('target', 'Water Bolt')

@@ -66,13 +66,14 @@ function PI:detect_cast( unit, spell, trigger, rollback )
   end)
 end
 
--- ### `detect_auras( string, string, string )
--- Trigger the callback when given unit has any spell matching the given
--- type and filter. The type will be set to auras the player can dispel or
--- purge be default.
-function PI:detect_auras( unit, filter, type )
-  -- body
-end
+-- TODO
+-- -- ### `detect_auras( string, string, string )
+-- -- Trigger the callback when given unit has any spell matching the given
+-- -- type and filter. The type will be set to auras the player can dispel or
+-- -- purge be default.
+-- function PI:detect_auras( unit, filter, type )
+--   -- body
+-- end
 
 -- ### `detect_aura( string, string, string, function, function )`
 -- Trigger callback when given unit has the given spell aura.

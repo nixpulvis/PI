@@ -1,9 +1,8 @@
 ## Interface: 50100
 ## Author: Epicgrim
 ## Version: 2.0.1
-## Title: PerfectInterrupt
+## Title: PI - Perfect Interrupt (Vox Protectors)
 ## Notes: Never miss that critical interrupt again. Blocks clicks until desired action.
-## SavedVariablesPerCharacter: PIConditions
 
 helpers.lua
 detection.lua
